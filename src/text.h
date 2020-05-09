@@ -72,6 +72,10 @@ void set_sunset_icon_layer_text(char*);
 void set_degrees_layer_text(char*);
 void set_compass_layer_text(char*);
 void set_seconds_layer_text(char*);
+#if !defined PBL_PLATFORM_APLITE
+void set_customtext_a_layer_text(char*);
+void set_customtext_b_layer_text(char*);
+#endif
 void set_crypto_layer_text(char*);
 #if !defined PBL_PLATFORM_APLITE
 void set_crypto_b_layer_text(char*);

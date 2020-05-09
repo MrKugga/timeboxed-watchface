@@ -86,6 +86,8 @@ class Layout extends Component {
             ),
             { value: '18', label: 'Alternate time zone A' },
             { value: '19', label: 'Alternate time zone B' },
+	    { value: '25', label: 'Tasker text A'},
+	    { value: '26', label: 'Tasker text B'},
         ].sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10));
 
         this.textModulesAplite = this.textModulesAll.filter(
@@ -833,6 +835,22 @@ class Layout extends Component {
                                     onChange={this.onChange.bind(this, 'cryptoDColor')}
                                 />
                             )}
+			    {this.isEnabled(['25']) && (
+                                <ColorPicker
+                                    fieldName="customTextAColor"
+                                    label={'Custom text A color'}
+                                    color={state.customTextAColor}
+                                    onChange={this.onChange.bind(this, 'customTextAColor')}
+                                />
+                            )}
+			    {this.isEnabled(['26']) && (
+                                <ColorPicker
+                                    fieldName="customTextBColor"
+                                    label={'Custom text B color'}
+                                    color={state.customTextBColor}
+                                    onChange={this.onChange.bind(this, 'customTextBColor')}
+                                />
+                            )}
                         </div>
                     )}
                 </OptionGroup>
@@ -1455,6 +1473,8 @@ class ColorPresets extends Component {
                 cryptoBColor: w,
                 cryptoCColor: w,
                 cryptoDColor: w,
+		customTextAColor: w,
+		customTextBColor: w,
             },
             Colorful: {
                 bgColor: '#000055',
@@ -1496,6 +1516,8 @@ class ColorPresets extends Component {
                 cryptoBColor: '#AAFFFF',
                 cryptoCColor: '#AAFFFF',
                 cryptoDColor: '#AAFFFF',
+		customTextAColor: '#AAFFFF',
+		customTextBColor: '#AAFFFF',		
             },
             'Green on black': {
                 bgColor: b,
@@ -1537,6 +1559,8 @@ class ColorPresets extends Component {
                 cryptoBColor: g,
                 cryptoCColor: g,
                 cryptoDColor: g,
+		customTextAColor: g,
+		customTextBColor: g,		
             },
             'Yellow/Orange on black': {
                 bgColor: b,
@@ -1578,6 +1602,8 @@ class ColorPresets extends Component {
                 cryptoBColor: o,
                 cryptoCColor: o,
                 cryptoDColor: o,
+		customTextAColor: o,
+		customTextBColor: o,		
             },
             'Blue on black': {
                 bgColor: b,
@@ -1619,6 +1645,8 @@ class ColorPresets extends Component {
                 cryptoBColor: u,
                 cryptoCColor: u,
                 cryptoDColor: u,
+		customTextAColor: u,
+		customTextBColor: u,		
             },
             'Red on black': {
                 bgColor: b,
@@ -1660,6 +1688,8 @@ class ColorPresets extends Component {
                 cryptoBColor: r,
                 cryptoCColor: r,
                 cryptoDColor: r,
+		customTextAColor: r,
+		customTextBColor: r,		
             },
             'Black and white (inverted)': {
                 bgColor: w,
@@ -1701,6 +1731,8 @@ class ColorPresets extends Component {
                 cryptoBColor: b,
                 cryptoCColor: b,
                 cryptoDColor: b,
+		customTextAColor: b,
+		customTextBColor: b,		
             },
             'Green on white': {
                 bgColor: w,
@@ -1742,6 +1774,8 @@ class ColorPresets extends Component {
                 cryptoBColor: g,
                 cryptoCColor: g,
                 cryptoDColor: g,
+		customTextAColor: g,
+		customTextBColor: g,		
             },
             'Blue on white': {
                 bgColor: w,
@@ -1781,6 +1815,8 @@ class ColorPresets extends Component {
                 cryptoBColor: d,
                 cryptoCColor: d,
                 cryptoDColor: d,
+		customTextAColor: d,
+		customTextBColor: d,		
             },
         };
 

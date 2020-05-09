@@ -12,6 +12,7 @@
 #include "compass.h"
 #include "crypto.h"
 #include "phonebattery.h"
+#include "customtext.h"
 
 static Window *watchface;
 
@@ -81,7 +82,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         notify_update(update_val);
         return;
     }
-
+    
     Tuple *temp_tuple = dict_find(iterator, KEY_TEMP);
     Tuple *max_tuple = dict_find(iterator, KEY_MAX);
     Tuple *min_tuple = dict_find(iterator, KEY_MIN);
@@ -113,6 +114,31 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         return;
     }
 
+
+    #if !defined PBL_PLATFORM_APLITE
+    Tuple *custom_text_a = dict_find(iterator, KEY_CUSTOMTEXTATEXT);
+    Tuple *custom_text_b = dict_find(iterator, KEY_CUSTOMTEXTBTEXT);
+
+    if (custom_text_a || custom_text_b) {
+        if (custom_text_a) {
+            static char custom_text_val[22];
+            char* value = custom_text_a->value->cstring;
+            strcpy(custom_text_val, value);
+            update_customtext_a_text(custom_text_val);
+            store_customtext_a_text(custom_text_val);
+        }
+
+        if (custom_text_b) {
+            static char custom_text_val[22];
+            char* value = custom_text_b->value->cstring;
+            strcpy(custom_text_val, value);
+            update_customtext_b_text(custom_text_val);
+            store_customtext_b_text(custom_text_val);
+        }	
+
+        return;
+    }
+    #endif
 
     #if !defined PBL_PLATFORM_APLITE
     Tuple *crypto_price = dict_find(iterator, KEY_CRYPTOPRICE);
@@ -340,8 +366,10 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         KEY_CRYPTOBCOLOR,
         KEY_CRYPTOCCOLOR,
         KEY_CRYPTODCOLOR,
+	KEY_CUSTOMTEXTACOLOR,
+	KEY_CUSTOMTEXTBCOLOR,
     };
-    uint8_t num_colors = 25;
+    uint8_t num_colors = 27;
     #else
     uint32_t color_keys[] = {
         KEY_BGCOLOR,
@@ -391,7 +419,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     key_value = NULL; key_value = dict_find(iterator, KEY_HEARTHIGH);
     if (key_value) {
         persist_write_int(KEY_HEARTHIGH, key_value->value->int32);
-    }
+ }
     #endif
 
     key_value = NULL; key_value = dict_find(iterator, KEY_OVERRIDELOCATION);
