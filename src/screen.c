@@ -10,6 +10,8 @@
 #include "compass.h"
 #include "clock.h"
 #include "crypto.h"
+#include "phonebattery.h"
+#include "customtext.h"
 
 void load_screen(uint8_t reload_origin, Window *watchface) {
     load_locale();
@@ -29,7 +31,9 @@ void load_screen(uint8_t reload_origin, Window *watchface) {
 
     toggle_weather(reload_origin);
     #if !defined PBL_PLATFORM_APLITE
+    toggle_phonebattery(reload_origin);
     toggle_crypto(reload_origin);
+    toggle_customtext(reload_origin);
     #endif
     battery_handler(battery_state_service_peek());
     bt_handler(connection_service_peek_pebble_app_connection());

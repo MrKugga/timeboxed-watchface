@@ -11,12 +11,13 @@
 #include "accel.h"
 #include "compass.h"
 #include "crypto.h"
+#include "phonebattery.h"
+#include "customtext.h"
 
 static Window *watchface;
 
 #if defined(PBL_HEALTH)
 static int min_count = 0;
-static int min_count_crypto = 0;
 static uint8_t health_color_keys[] = {
     KEY_STEPSCOLOR,
     KEY_STEPSBEHINDCOLOR,
@@ -79,7 +80,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         notify_update(update_val);
         return;
     }
-
+    
     Tuple *temp_tuple = dict_find(iterator, KEY_TEMP);
     Tuple *max_tuple = dict_find(iterator, KEY_MAX);
     Tuple *min_tuple = dict_find(iterator, KEY_MIN);
@@ -111,6 +112,31 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         return;
     }
 
+
+    #if !defined PBL_PLATFORM_APLITE
+    Tuple *custom_text_a = dict_find(iterator, KEY_CUSTOMTEXTATEXT);
+    Tuple *custom_text_b = dict_find(iterator, KEY_CUSTOMTEXTBTEXT);
+
+    if (custom_text_a || custom_text_b) {
+        if (custom_text_a) {
+            static char custom_text_val[22];
+            char* value = custom_text_a->value->cstring;
+            strcpy(custom_text_val, value);
+            update_customtext_a_text(custom_text_val);
+            store_customtext_a_text(custom_text_val);
+        }
+
+        if (custom_text_b) {
+            static char custom_text_val[22];
+            char* value = custom_text_b->value->cstring;
+            strcpy(custom_text_val, value);
+            update_customtext_b_text(custom_text_val);
+            store_customtext_b_text(custom_text_val);
+        }	
+
+        return;
+    }
+    #endif
 
     #if !defined PBL_PLATFORM_APLITE
     Tuple *crypto_price = dict_find(iterator, KEY_CRYPTOPRICE);
@@ -150,6 +176,22 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
             update_crypto_price_d(crypto_val);
             store_crypto_price_d(crypto_val);
         }
+        return;
+    }
+    #endif
+
+    
+    #if !defined PBL_PLATFORM_APLITE
+    Tuple *phonebattery_level = dict_find(iterator, KEY_PHONEBATTERY_LEVEL);
+    Tuple *phonebattery_charging = dict_find(iterator, KEY_PHONEBATTERY_CHARGING);
+
+    if (phonebattery_level || phonebattery_charging) {
+
+        int phbatt_lvl_val = (int)phonebattery_level->value->int32;
+        int phbatt_chg_val = (int)phonebattery_charging->value->int32;
+
+	update_phonebattery_value(phbatt_lvl_val,phbatt_chg_val);
+	store_phonebattery_vals(phbatt_lvl_val, phbatt_chg_val);
         return;
     }
     #endif
@@ -272,8 +314,9 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         KEY_WEATHERTIME,
         KEY_DATESEPARATOR,
         KEY_CRYPTOTIME,
+	KEY_PHONEBATTERYTIME,
     };
-    uint8_t num_int = 8;
+    uint8_t num_int = 9;
     #else
     uint32_t int_keys[] = {
         KEY_FONTTYPE,
@@ -305,6 +348,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         KEY_UPDATECOLOR,
         KEY_BATTERYCOLOR,
         KEY_BATTERYLOWCOLOR,
+        KEY_PHONEBATTERYCOLOR,
+        KEY_PHONEBATTERYLOWCOLOR,	
         KEY_TEMPCOLOR,
         KEY_WEATHERCOLOR,
         KEY_MINCOLOR,
@@ -320,8 +365,10 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         KEY_CRYPTOBCOLOR,
         KEY_CRYPTOCCOLOR,
         KEY_CRYPTODCOLOR,
+	KEY_CUSTOMTEXTACOLOR,
+	KEY_CUSTOMTEXTBCOLOR,
     };
-    uint8_t num_colors = 23;
+    uint8_t num_colors = 27;
     #else
     uint32_t color_keys[] = {
         KEY_BGCOLOR,
@@ -371,7 +418,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     key_value = NULL; key_value = dict_find(iterator, KEY_HEARTHIGH);
     if (key_value) {
         persist_write_int(KEY_HEARTHIGH, key_value->value->int32);
-    }
+ }
     #endif
 
     key_value = NULL; key_value = dict_find(iterator, KEY_OVERRIDELOCATION);
@@ -504,6 +551,49 @@ static void watchface_unload(Window *window) {
     destroy_text_layers();
 }
 
+static void request_update_from_js() {
+  int current_time = (int)time(NULL);
+  #if !defined PBL_PLATFORM_APLITE
+  bool needupdate = (is_weather_need_update() ||
+		     is_phonebattery_need_update() ||
+		     is_crypto_need_update());
+  #else
+  bool needupdate = (is_weather_need_update());
+  #endif
+  if (needupdate == true) {
+    DictionaryIterator *iter;
+    AppMessageResult result = app_message_outbox_begin(&iter);
+    if (result == APP_MSG_OK) {
+      if (is_weather_need_update()) {
+	dict_write_uint8(iter, KEY_REQUESTWEATHER, 1);
+      }
+
+      #if !defined PBL_PLATFORM_APLITE
+      if (is_phonebattery_need_update()) {
+	dict_write_uint8(iter, KEY_REQUESTPHONEBATTERY, 1);
+      }
+      if (is_crypto_need_update()) {
+	dict_write_uint8(iter, KEY_REQUESTCRYPTO, 1);
+      }
+      #endif
+      result = app_message_outbox_send();
+      if (result == APP_MSG_OK) {
+        if (is_weather_need_update()) {
+	  weather_set_updatetime(current_time);
+	}
+        #if !defined PBL_PLATFORM_APLITE	
+	if (is_phonebattery_need_update()) {
+	  phonebattery_set_updatetime(current_time);
+	}
+	if (is_crypto_need_update()) {
+	  crypto_set_updatetime(current_time);
+	}
+	#endif
+      }
+    }
+  }
+}
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
     if (is_module_enabled(MODULE_SECONDS)) {
         update_seconds(tick_time);
@@ -525,39 +615,19 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
     #endif
 
     if (units_changed & MINUTE_UNIT) {
-        if (is_weather_enabled()) {
-            #if defined(PBL_HEALTH)
-                if (is_user_sleeping()) {
-                    min_count++;
-                    if (min_count > 90) {
-                        update_weather(false);
-                        min_count = 0;
-                    }
-                } else {
-                    update_weather(false);
-                }
-            #else
-                update_weather(false);
-            #endif
-        }
-
-        #if !defined PBL_PLATFORM_APLITE
-        if (is_crypto_enabled()) {
-            #if defined(PBL_HEALTH)
-                if (is_user_sleeping()) {
-                    min_count_crypto++;
-                    if (min_count_crypto > 90) {
-                        update_crypto(false);;
-                        min_count_crypto = 0;
-                    }
-                } else {
-                    update_crypto(false);;
-                }
-            #else
-                update_crypto(false);;
-            #endif
-        }
-        #endif
+        #if defined(PBL_HEALTH) 
+        if (is_user_sleeping()) {
+	    min_count++;
+            if (min_count > 90) {
+	      request_update_from_js();
+	      min_count = 0;
+	    }
+	} else {
+	  request_update_from_js();
+	}
+	#else
+	request_update_from_js();
+	#endif
 
         update_time();
 

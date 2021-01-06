@@ -71,6 +71,7 @@ class Layout extends Component {
             { value: '21', label: 'Cryptocurrency B' },
             { value: '22', label: 'Cryptocurrency C' },
             { value: '23', label: 'Cryptocurrency D' },
+	    { value: '24', label: 'Phone battery state'},
         ];
 
         this.modulesAplite = this.modulesAll.filter(
@@ -80,11 +81,13 @@ class Layout extends Component {
         this.textModulesAll = [
             ...this.modulesAll.filter(
                 (module) =>
-                    ['0', '3', '4', '5', '6', '7', '13', '16', '17', '20', '21', '22', '23'].indexOf(module.value) !==
+                    ['0', '3', '4', '5', '6', '7', '13', '16', '17', '20', '21', '22', '23', '24'].indexOf(module.value) !==
                     -1
             ),
             { value: '18', label: 'Alternate time zone A' },
             { value: '19', label: 'Alternate time zone B' },
+	    { value: '25', label: 'Tasker text A'},
+	    { value: '26', label: 'Tasker text B'},
         ].sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10));
 
         this.textModulesAplite = this.textModulesAll.filter(
@@ -643,6 +646,16 @@ class Layout extends Component {
                                     onSecondColorChange={this.onChange.bind(this, 'batteryLowColor')}
                                 />
                             )}
+                            {this.isEnabled(['24']) && (
+                                <ColorPicker
+                                    fieldName="phoneBatteryColor"
+                                    label={'Phone Battery/Low Battery color'}
+                                    color={state.phoneBatteryColor}
+                                    onChange={this.onChange.bind(this, 'phoneBatteryColor')}
+                                    secondColor={state.phoneBatteryLowColor}
+                                    onSecondColorChange={this.onChange.bind(this, 'phoneBatteryLowColor')}
+                                />
+                            )}
                             <ColorPicker
                                 fieldName="bluetoothColor"
                                 label={'Bluetooth disconnected'}
@@ -822,6 +835,22 @@ class Layout extends Component {
                                     onChange={this.onChange.bind(this, 'cryptoDColor')}
                                 />
                             )}
+			    {this.isEnabled(['25']) && (
+                                <ColorPicker
+                                    fieldName="customTextAColor"
+                                    label={'Custom text A color'}
+                                    color={state.customTextAColor}
+                                    onChange={this.onChange.bind(this, 'customTextAColor')}
+                                />
+                            )}
+			    {this.isEnabled(['26']) && (
+                                <ColorPicker
+                                    fieldName="customTextBColor"
+                                    label={'Custom text B color'}
+                                    color={state.customTextBColor}
+                                    onChange={this.onChange.bind(this, 'customTextBColor')}
+                                />
+                            )}
                         </div>
                     )}
                 </OptionGroup>
@@ -957,6 +986,18 @@ class Layout extends Component {
                         />
                     </OptionGroup>
                 )}
+	    
+	        {this.isEnabled(['24']) && (
+                    <OptionGroup title={'Phone battery state'}>
+                        <RadioButtonGroup
+                            fieldName="phoneBatteryTime"
+                            label={'Refresh interval'}
+                            options={refreshTimes}
+                            selectedItem={state.phoneBatteryTime}
+                            onChange={this.onChange.bind(this, 'phoneBatteryTime')}
+                        />
+                    </OptionGroup>
+                )}	    
 
                 <OptionGroup title={'Master Key (pmkey.xyz)'}>
                     <TextField
@@ -1400,6 +1441,8 @@ class ColorPresets extends Component {
                 altHoursBColor: w,
                 batteryColor: w,
                 batteryLowColor: w,
+                phoneBatteryColor: w,
+                phoneBatteryLowColor: w,
                 bluetoothColor: w,
                 updateColor: w,
                 weatherColor: w,
@@ -1430,6 +1473,8 @@ class ColorPresets extends Component {
                 cryptoBColor: w,
                 cryptoCColor: w,
                 cryptoDColor: w,
+		customTextAColor: w,
+		customTextBColor: w,
             },
             Colorful: {
                 bgColor: '#000055',
@@ -1439,6 +1484,8 @@ class ColorPresets extends Component {
                 altHoursBColor: '#00FFFF',
                 batteryColor: l,
                 batteryLowColor: e,
+                phoneBatteryColor: l,
+                phoneBatteryLowColor: e,
                 bluetoothColor: e,
                 updateColor: '#00FF00',
                 weatherColor: y,
@@ -1469,6 +1516,8 @@ class ColorPresets extends Component {
                 cryptoBColor: '#AAFFFF',
                 cryptoCColor: '#AAFFFF',
                 cryptoDColor: '#AAFFFF',
+		customTextAColor: '#AAFFFF',
+		customTextBColor: '#AAFFFF',		
             },
             'Green on black': {
                 bgColor: b,
@@ -1478,6 +1527,8 @@ class ColorPresets extends Component {
                 altHoursBColor: g,
                 batteryColor: l,
                 batteryLowColor: e,
+                phoneBatteryColor: l,
+                phoneBatteryLowColor: e,
                 bluetoothColor: e,
                 updateColor: '#00FF00',
                 weatherColor: '#00FF00',
@@ -1508,6 +1559,8 @@ class ColorPresets extends Component {
                 cryptoBColor: g,
                 cryptoCColor: g,
                 cryptoDColor: g,
+		customTextAColor: g,
+		customTextBColor: g,		
             },
             'Yellow/Orange on black': {
                 bgColor: b,
@@ -1517,6 +1570,8 @@ class ColorPresets extends Component {
                 altHoursBColor: o,
                 batteryColor: l,
                 batteryLowColor: e,
+                phoneBatteryColor: l,
+                phoneBatteryLowColor: e,
                 bluetoothColor: e,
                 updateColor: y,
                 weatherColor: y,
@@ -1547,6 +1602,8 @@ class ColorPresets extends Component {
                 cryptoBColor: o,
                 cryptoCColor: o,
                 cryptoDColor: o,
+		customTextAColor: o,
+		customTextBColor: o,		
             },
             'Blue on black': {
                 bgColor: b,
@@ -1556,6 +1613,8 @@ class ColorPresets extends Component {
                 altHoursBColor: u,
                 batteryColor: l,
                 batteryLowColor: e,
+                phoneBatteryColor: l,
+                phoneBatteryLowColor: e,
                 bluetoothColor: e,
                 updateColor: '#00FFFF',
                 weatherColor: '#00FFFF',
@@ -1586,6 +1645,8 @@ class ColorPresets extends Component {
                 cryptoBColor: u,
                 cryptoCColor: u,
                 cryptoDColor: u,
+		customTextAColor: u,
+		customTextBColor: u,		
             },
             'Red on black': {
                 bgColor: b,
@@ -1595,6 +1656,8 @@ class ColorPresets extends Component {
                 altHoursBColor: r,
                 batteryColor: l,
                 batteryLowColor: o,
+                phoneBatteryColor: l,
+                phoneBatteryLowColor: o,
                 bluetoothColor: o,
                 updateColor: '#FF5555',
                 weatherColor: '#FF5555',
@@ -1625,6 +1688,8 @@ class ColorPresets extends Component {
                 cryptoBColor: r,
                 cryptoCColor: r,
                 cryptoDColor: r,
+		customTextAColor: r,
+		customTextBColor: r,		
             },
             'Black and white (inverted)': {
                 bgColor: w,
@@ -1634,6 +1699,8 @@ class ColorPresets extends Component {
                 altHoursBColor: b,
                 batteryColor: b,
                 batteryLowColor: b,
+                phoneBatteryColor: b,
+                phoneBatteryLowColor: b,
                 bluetoothColor: b,
                 updateColor: b,
                 weatherColor: b,
@@ -1664,6 +1731,8 @@ class ColorPresets extends Component {
                 cryptoBColor: b,
                 cryptoCColor: b,
                 cryptoDColor: b,
+		customTextAColor: b,
+		customTextBColor: b,		
             },
             'Green on white': {
                 bgColor: w,
@@ -1673,6 +1742,8 @@ class ColorPresets extends Component {
                 altHoursBColor: g,
                 batteryColor: m,
                 batteryLowColor: '#AA0000',
+                phoneBatteryColor: m,
+                phoneBatteryLowColor: '#AA0000',
                 bluetoothColor: '#AA0000',
                 updateColor: '#005500',
                 weatherColor: '#005500',
@@ -1703,6 +1774,8 @@ class ColorPresets extends Component {
                 cryptoBColor: g,
                 cryptoCColor: g,
                 cryptoDColor: g,
+		customTextAColor: g,
+		customTextBColor: g,		
             },
             'Blue on white': {
                 bgColor: w,
@@ -1742,6 +1815,8 @@ class ColorPresets extends Component {
                 cryptoBColor: d,
                 cryptoCColor: d,
                 cryptoDColor: d,
+		customTextAColor: d,
+		customTextBColor: d,		
             },
         };
 
@@ -2926,6 +3001,8 @@ const defaultColors = {
     altHoursBColor: w,
     batteryColor: w,
     batteryLowColor: w,
+    phoneBatteryColor: w,
+    phoneBatteryLowColor: w,
     bluetoothColor: w,
     updateColor: w,
     weatherColor: w,

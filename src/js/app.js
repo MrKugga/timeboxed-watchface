@@ -21,7 +21,8 @@ Pebble.addEventListener('appmessage', function(e) {
     if (e.payload.KEY_HASUPDATE) {
         console.log('Checking for updates...');
         checkForUpdates();
-    } else if (e.payload.KEY_REQUESTWEATHER) {
+    }
+    if (e.payload.KEY_REQUESTWEATHER) {
         console.log('Fetching weather info...');
         var weatherKey = localStorage.weatherKey;
         var provider = 2;
@@ -57,9 +58,14 @@ Pebble.addEventListener('appmessage', function(e) {
             useCelsius,
             localStorage.overrideLocation
         );
-    } else if (e.payload.KEY_REQUESTCRYPTO) {
+    }
+    if (e.payload.KEY_REQUESTCRYPTO) {
         console.log('Retrieving cryptocurrencies...');
         getCryptocurrencies();
+    }
+    if (e.payload.KEY_REQUESTPHONEBATTERY) {
+        console.log('Retrieving phone battery state...');
+        getPhoneBattery();
     }
 });
 
@@ -140,7 +146,8 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
         if (
             key === 'KEY_WEATHERTIME' ||
-            key === 'KEY_CRYPTOTIME'
+	    key === 'KEY_CRYPTOTIME' ||
+	    key === 'KEY_PHONEBATTERYTIME'	
         ) {
             value = parseInt(value || '15', 10);
         }
@@ -997,6 +1004,32 @@ var getCryptocurrencies = function() {
         console.log(ex);
     }
 };
+
+
+// got it from https://github.com/stefanheule/graphite
+var getPhoneBattery = function () {
+    if (!navigator.getBattery) {
+        var data = {
+            "KEY_PHONEBATTERY_LEVEL": 101,
+	    "KEY_PHONEBATTERY_CHARGING": 0,
+        };
+        console.log('Phone battery not supported.');
+        Pebble.sendAppMessage(data);
+        return;
+    }
+
+    navigator.getBattery().then(function(battery) {
+        var level = Math.round(battery.level * 100);
+	var charging = battery.charging ? 1 : 0;
+        var data = {
+            "KEY_PHONEBATTERY_LEVEL": level,
+	    "KEY_PHONEBATTERY_CHARGING": charging,
+        };
+        console.log('Phone battery = ' + battery.level  + ".");
+        console.log('Phone charging = ' + battery.charging  + ".");	
+        Pebble.sendAppMessage(data);
+    });
+}
 
 var formatNumber = function(number) {
     var numberStr = '' + number;

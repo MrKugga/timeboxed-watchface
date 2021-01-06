@@ -19,6 +19,9 @@ uint8_t get_loaded_font();
 void set_bluetooth_color();
 void set_update_color();
 void set_battery_color();
+#if !defined PBL_PLATFORM_APLITE
+void set_phonebattery_color();
+#endif
 
 void set_hours_layer_text(char*);
 void set_date_layer_text(char*);
@@ -27,6 +30,9 @@ void set_alt_time_layer_text(char*);
 void set_alt_time_b_layer_text(char*);
 #endif
 void set_battery_layer_text(char*);
+#if !defined PBL_PLATFORM_APLITE
+void set_phonebattery_layer_text(char*);
+#endif
 void set_bluetooth_layer_text(char*);
 void set_temp_cur_layer_text(char*);
 void set_temp_max_layer_text(char*);
@@ -65,6 +71,10 @@ void set_sunset_icon_layer_text(char*);
 void set_degrees_layer_text(char*);
 void set_compass_layer_text(char*);
 void set_seconds_layer_text(char*);
+#if !defined PBL_PLATFORM_APLITE
+void set_customtext_a_layer_text(char*);
+void set_customtext_b_layer_text(char*);
+#endif
 void set_crypto_layer_text(char*);
 #if !defined PBL_PLATFORM_APLITE
 void set_crypto_b_layer_text(char*);
