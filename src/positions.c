@@ -45,6 +45,12 @@ static void get_text_positions_blocko(GTextAlignment align, struct TextPositions
             get_pos(align, midpoint - 24, midpoint + 34, midpoint - 24)
         )
     );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, 0)),
+        PBL_IF_ROUND_ELSE(midpoint + 34,
+            get_pos(align, midpoint, midpoint + 34, midpoint)
+        )
+    );
     positions->updates = create_point(
         PBL_IF_ROUND_ELSE(120, get_pos(align, -4, 112, 0)),
         PBL_IF_ROUND_ELSE(midpoint + 34,
@@ -67,6 +73,12 @@ static void get_text_positions_blocko_big(GTextAlignment align, struct TextPosit
         PBL_IF_ROUND_ELSE(134, get_pos(align, -4, 126, 0)),
         PBL_IF_ROUND_ELSE(midpoint + 40,
             get_pos(align, midpoint - 30, midpoint + 40, midpoint - 30)
+        )
+    );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, 0)),
+        PBL_IF_ROUND_ELSE(midpoint + 40,
+            get_pos(align, midpoint - 6, midpoint + 40, midpoint - 6)
         )
     );
     positions->updates = create_point(
@@ -93,6 +105,12 @@ static void get_text_positions_system(GTextAlignment align, struct TextPositions
                 get_pos(align, midpoint - 30, midpoint + 40, midpoint - 30)
             )
     );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, 0)),
+        PBL_IF_ROUND_ELSE(midpoint + 40,
+                get_pos(align, midpoint - 6, midpoint + 40, midpoint - 6)
+            )
+    );
     positions->updates = create_point(
         PBL_IF_ROUND_ELSE(120, get_pos(align, -4, 112, 0)),
         PBL_IF_ROUND_ELSE(midpoint + 40,
@@ -115,6 +133,12 @@ static void get_text_positions_archivo(GTextAlignment align, struct TextPosition
         PBL_IF_ROUND_ELSE(134, get_pos(align, -4, 126, 0)),
         PBL_IF_ROUND_ELSE(midpoint + 40,
             get_pos(align, midpoint - 30, midpoint + 40, midpoint - 30)
+        )
+    );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, 0)),
+        PBL_IF_ROUND_ELSE(midpoint + 40,
+            get_pos(align, midpoint - 6, midpoint + 40, midpoint - 6)
         )
     );
     positions->updates = create_point(
@@ -141,6 +165,12 @@ static void get_text_positions_din(GTextAlignment align, struct TextPositions* p
             get_pos(align, midpoint - 30, midpoint + 40, midpoint - 30)
         )
     );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, 0)),
+        PBL_IF_ROUND_ELSE(midpoint + 40,
+            get_pos(align, midpoint - 6, midpoint + 40, midpoint - 6)
+        )
+    );    
     positions->updates = create_point(
         PBL_IF_ROUND_ELSE(120, get_pos(align, -4, 112, 0)),
         PBL_IF_ROUND_ELSE(midpoint + 40,
@@ -163,6 +193,12 @@ static void get_text_positions_prototype(GTextAlignment align, struct TextPositi
         PBL_IF_ROUND_ELSE(134, get_pos(align, -2, 126, -2)),
         PBL_IF_ROUND_ELSE(midpoint + 34,
             get_pos(align, midpoint - 24, midpoint + 34, midpoint - 24)
+        )
+    );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 9, 9, -2)),
+        PBL_IF_ROUND_ELSE(midpoint + 34,
+            get_pos(align, midpoint, midpoint + 34, midpoint)
         )
     );
     positions->updates = create_point(
@@ -189,6 +225,12 @@ static void get_text_positions_leco(GTextAlignment align, struct TextPositions* 
             get_pos(align, midpoint - 26, midpoint + 34, midpoint - 26)
         )
     );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, -2)),
+        PBL_IF_ROUND_ELSE(midpoint + 34,
+            get_pos(align, midpoint - 2, midpoint + 34, midpoint - 2)
+        )
+    );
     positions->updates = create_point(
         PBL_IF_ROUND_ELSE(120, get_pos(align, -4, 112, -2)),
         PBL_IF_ROUND_ELSE(midpoint + 34,
@@ -211,6 +253,12 @@ static void get_text_positions_konstruct(GTextAlignment align, struct TextPositi
         PBL_IF_ROUND_ELSE(134, get_pos(align, -4, 126, -2)),
         PBL_IF_ROUND_ELSE(midpoint + 40,
             get_pos(align, midpoint - 30, midpoint + 40, midpoint - 30)
+        )
+    );
+    positions->quiettime = create_point(
+        PBL_IF_ROUND_ELSE(7, get_pos(align, 7, 7, -2)),
+        PBL_IF_ROUND_ELSE(midpoint + 40,
+            get_pos(align, midpoint - 6, midpoint + 40, midpoint - 6)
         )
     );
     positions->updates = create_point(

@@ -599,6 +599,8 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
         update_seconds(tick_time);
     }
 
+    update_quiet_time_icon(false);
+
     #if !defined PBL_PLATFORM_APLITE
     if (tap_mode_visible() || wrist_mode_visible()) {
         sec_count++;

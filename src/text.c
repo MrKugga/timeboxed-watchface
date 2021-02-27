@@ -9,6 +9,7 @@ static TextLayer *date;
 static TextLayer *alt_time;
 static TextLayer *battery;
 static TextLayer *bluetooth;
+static TextLayer *quiettime;
 static TextLayer *temp_cur;
 static TextLayer *temp_max;
 static TextLayer *temp_min;
@@ -86,6 +87,7 @@ static GColor heart_color_off;
 static char hour_text[13];
 static char date_text[13];
 static char bluetooth_text[4];
+static char quiettime_text[4];
 static char update_text[4];
 static char battery_text[8];
 static char alt_time_text[22];
@@ -255,6 +257,11 @@ void create_text_layers(Window* window) {
         text_layer_set_text_alignment(battery, PBL_IF_ROUND_ELSE(GTextAlignmentCenter,
                     is_simple_mode_enabled() || slot > 3 ? text_align : (slot % 2 == 0 ? GTextAlignmentLeft : GTextAlignmentRight)));
     }
+
+    quiettime = text_layer_create(GRect(text_positions.quiettime.x, text_positions.quiettime.y, width, 50));
+    text_layer_set_background_color(quiettime, GColorClear);
+    text_layer_set_text_alignment(quiettime, text_align == GTextAlignmentLeft ? GTextAlignmentRight : GTextAlignmentLeft);
+    layer_set_hidden(text_layer_get_layer(quiettime), height != full_height);
 
     bluetooth = text_layer_create(GRect(text_positions.bluetooth.x, text_positions.bluetooth.y, width, 50));
     text_layer_set_background_color(bluetooth, GColorClear);
@@ -514,6 +521,7 @@ void create_text_layers(Window* window) {
     add_text_layer(window_layer, alt_time);
     add_text_layer(window_layer, battery);
     add_text_layer(window_layer, bluetooth);
+    add_text_layer(window_layer, quiettime);
     add_text_layer(window_layer, update);
     add_text_layer(window_layer, weather);
     add_text_layer(window_layer, min_icon);
@@ -566,6 +574,8 @@ void destroy_text_layers() {
     battery = NULL;
     delete_text_layer(bluetooth);
     bluetooth = NULL;
+    delete_text_layer(quiettime);
+    quiettime = NULL;
     delete_text_layer(update);
     update = NULL;
     delete_text_layer(weather);
@@ -707,6 +717,7 @@ void set_face_fonts() {
     set_text_font(alt_time, base_font);
     set_text_font(battery, base_font);
     set_text_font(bluetooth, custom_font);
+    set_text_font(quiettime, custom_font);
     set_text_font(update, custom_font);
     set_text_font(weather, weather_font);
     set_text_font(min_icon, custom_font);
@@ -887,6 +898,11 @@ void set_bluetooth_color() {
         enable_advanced && persist_exists(KEY_BLUETOOTHCOLOR) ? GColorFromHEX(persist_read_int(KEY_BLUETOOTHCOLOR)) : base_color);
 }
 
+void set_quiet_time_color() {
+    set_text_color(quiettime,
+        enable_advanced && persist_exists(KEY_QUIETTIMECOLOR) ? GColorFromHEX(persist_read_int(KEY_QUIETTIMECOLOR)) : base_color);
+}
+
 void set_update_color() {
     set_text_color(update,
         enable_advanced && persist_exists(KEY_UPDATECOLOR) ? GColorFromHEX(persist_read_int(KEY_UPDATECOLOR)) : base_color);
@@ -952,6 +968,11 @@ void set_phonebattery_layer_text(char* text) {
 void set_bluetooth_layer_text(char* text) {
     strcpy(bluetooth_text, text);
     set_text(bluetooth, bluetooth_text);
+}
+
+void set_quiet_time_layer_text(char* text) {
+    strcpy(quiettime_text, text);
+    set_text(quiettime, quiettime_text);
 }
 
 void set_temp_cur_layer_text(char* text) {

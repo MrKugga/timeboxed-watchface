@@ -2,7 +2,6 @@
   "version": "5.9.0",
   "author": "Luis Bento",
   "private": true,
-  "dependencies": {},
   "keywords": [
     "pebble-app"
   ],
@@ -38,7 +37,7 @@
         },
         {
           "type": "font",
-          "characterRegex": "[a-zA-Z0-7*()#$%]",
+          "characterRegex": "[a-zA-Z0-7*()#$%?]",
           "compatibility": "2.7",
           "file": "fonts/custom-icons.ttf",
           "name": "FONT_ICONS_20",
@@ -520,7 +519,6 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery-slim": "^3.0.0",
     "js-base64": "^2.3.2",
-    "node-sass": "^3.4.2",
     "object-assign": "^4.1.1",
     "postcss-loader": "^0.9.1",
     "preact": "^8.2.5",
@@ -538,7 +536,6 @@
     "strip-comments": "^0.4.4",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
     "webpack-merge": "^0.10.0"
   },

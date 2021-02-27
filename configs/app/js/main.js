@@ -663,6 +663,12 @@ class Layout extends Component {
                                 onChange={this.onChange.bind(this, 'bluetoothColor')}
                             />
                             <ColorPicker
+                                fieldName="quietTimeColor"
+                                label={'Quiet time enabled'}
+                                color={state.quietTimeColor}
+                                onChange={this.onChange.bind(this, 'quietTimeColor')}
+                            />
+                            <ColorPicker
                                 fieldName="updateColor"
                                 label={'Update notification'}
                                 color={state.updateColor}
@@ -1444,6 +1450,7 @@ class ColorPresets extends Component {
                 phoneBatteryColor: w,
                 phoneBatteryLowColor: w,
                 bluetoothColor: w,
+                quietTimeColor: w,
                 updateColor: w,
                 weatherColor: w,
                 tempColor: w,
@@ -3004,6 +3011,7 @@ const defaultColors = {
     phoneBatteryColor: w,
     phoneBatteryLowColor: w,
     bluetoothColor: w,
+    quietTimeColor: w,
     updateColor: w,
     weatherColor: w,
     tempColor: w,

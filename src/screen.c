@@ -40,6 +40,7 @@ void load_screen(uint8_t reload_origin, Window *watchface) {
     time_t temp = time(NULL);
     struct tm *tick_time = localtime(&temp);
     update_seconds(tick_time);
+    update_quiet_time_icon(true);
 }
 
 void reload_fonts() {
@@ -57,6 +58,23 @@ void recreate_text_layers(Window * watchface) {
 void redraw_screen(Window *watchface) {
     recreate_text_layers(watchface);
     load_screen(RELOAD_MODULE, watchface);
+}
+
+void update_quiet_time_icon(bool force) {
+  bool force_update = !persist_exists(KEY_QUIETTIMEON) || force;
+  int prev_state = persist_exists(KEY_QUIETTIMEON) ? persist_read_int(KEY_QUIETTIMEON): 0;
+  bool update_icon = (prev_state ^ quiet_time_is_active()) || force_update;
+  if (update_icon) {
+    int qact = quiet_time_is_active();
+    if (qact) {
+      set_quiet_time_color();
+      set_quiet_time_layer_text("?");
+      persist_write_int(KEY_QUIETTIMEON, 1);
+    } else {
+      set_quiet_time_layer_text("");
+      persist_write_int(KEY_QUIETTIMEON, 1);      
+    }
+  }
 }
 
 void bt_handler(bool connected) {
