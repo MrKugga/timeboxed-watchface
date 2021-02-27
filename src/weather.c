@@ -61,7 +61,6 @@ static char* weather_conditions[] = {
     "\U0000F073", // hurricane: 46
 };
 
-<<<<<<< HEAD
 const int very_stale_weather_threshold = 121;
 const int stale_weather_threshold = 31;
 
@@ -97,8 +96,6 @@ void update_weather(bool force) {
 #endif
 }
 
-=======
->>>>>>> Request data from js in one fucntion to avoid clashes
 char* get_wind_direction_text(int degrees) {
     if (degrees > 349 || degrees <= 11) {
         return "S"; // N -> S
